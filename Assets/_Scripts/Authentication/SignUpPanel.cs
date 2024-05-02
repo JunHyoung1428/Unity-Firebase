@@ -22,15 +22,50 @@ public class SignUpPanel : MonoBehaviour
 
     public void SignUp()
     {
-        
+        SetInteractable(false);
+        string id = emailInputField.text;
+        string pass = passInputField.text;
+        string confirm = confirmInputField.text;
+
+        if ( pass != confirm )
+        {
+            panelController.ShowInfo("Password doesn't matched");
+            SetInteractable(true);
+
+            return;
+        }
+
+        //비동기싱크 방식이라 요청이 돌아오기 전까지는, 누르면 누른만큼 요청이감.
+        FirebaseManager.Auth.CreateUserWithEmailAndPasswordAsync(id, pass).ContinueWithOnMainThread(task =>
+        {
+            if ( task.IsCanceled )
+            {
+                panelController.ShowInfo("CreateUserWithEmailAndPasswordAsync was canceled.");
+                SetInteractable(true);
+
+                return;
+            }
+            if ( task.IsFaulted )
+            {
+                panelController.ShowInfo("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                SetInteractable(true);
+                return;
+            }
+            // Firebase user has been created.
+            Firebase.Auth.AuthResult result = task.Result;
+            panelController.ShowInfo($"Firebase user created successfully:" +
+                $" {result.User.DisplayName} ({result.User.UserId})");
+            panelController.SetActivePanel(PanelController.Panel.Login);
+            SetInteractable(true);
+        });
     }
 
     public void Cancel()
     {
-        
+        panelController.SetActivePanel(PanelController.Panel.Login);
     }
 
-    private void SetInteractable(bool interactable)
+    private void SetInteractable( bool interactable )
     {
         emailInputField.interactable = interactable;
         passInputField.interactable = interactable;
