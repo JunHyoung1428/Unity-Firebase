@@ -17,6 +17,11 @@ public class FirebaseManager : MonoBehaviour
     private static bool isValid;
     public static bool IsValid { get { return isValid; } }
 
+
+    /******************************************************
+    *                    Init Settings
+    ******************************************************/
+
     private void Awake()
     {
         CreateInstance();
