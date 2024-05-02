@@ -23,7 +23,7 @@ public class LoginPanel : MonoBehaviour
 
     public void SignUp()
     {
-        
+        panelController.SetActivePanel(PanelController.Panel.SignUp);
     }
 
     private void ResetPassword()
@@ -33,7 +33,29 @@ public class LoginPanel : MonoBehaviour
 
     public void Login()
     {
-        
+        SetInteractable(false);
+        string id = emailInputField.text;
+        string pass = passInputField.text;
+
+        FirebaseManager.Auth.SignInWithEmailAndPasswordAsync(id, pass).ContinueWithOnMainThread(task =>
+        {
+            if ( task.IsCanceled )
+            {
+                panelController.ShowInfo("SignInWithEmailAndPasswordAsync was canceled.");
+                SetInteractable(true);
+                return;
+            }
+            if ( task.IsFaulted )
+            {
+                panelController.ShowInfo($"SignInWithEmailAndPasswordAsync encountered an error: {task.Exception.Message}");
+                SetInteractable(true);
+                return;
+            }
+            panelController.SetActivePanel(PanelController.Panel.Verify);
+            SetInteractable(true);
+            //Firebase.Auth.AuthResult result = task.Result;
+            //panelController.ShowInfo($"User signed in successfully: {result.User.DisplayName} ({result.User.UserId})");
+        });
     }
 
     private void SetInteractable(bool interactable)
