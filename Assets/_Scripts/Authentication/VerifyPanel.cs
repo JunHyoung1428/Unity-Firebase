@@ -22,11 +22,25 @@ public class VerifyPanel : MonoBehaviour
 
     private void Logout()
     {
-        
+        FirebaseManager.Auth.SignOut();//얘만 비동기식
+        panelController.SetActivePanel(PanelController.Panel.Login);
     }
 
     private void SendVerifyMail()
     {
-        
+        FirebaseManager.Auth.CurrentUser.SendEmailVerificationAsync().ContinueWithOnMainThread(task =>
+        {
+            if ( task.IsCanceled )
+            {
+                panelController.ShowInfo("SendEmailVerificationAsync canceled");
+                return;
+            }else if(task.IsFaulted )
+            {
+                panelController.ShowInfo("SendEmailVerificationAsync faulted");
+                return;
+            }
+
+
+        });
     }
 }
