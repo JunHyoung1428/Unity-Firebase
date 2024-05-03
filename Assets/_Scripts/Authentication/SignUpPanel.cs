@@ -35,6 +35,18 @@ public class SignUpPanel : MonoBehaviour
             return;
         }
 
+
+        FirebaseManager.DB
+            .GetReference("UserData/dd")
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+
+
+
+            });
+        
+
         //비동기싱크 방식이라 요청이 돌아오기 전까지는, 누르면 누른만큼 요청이감.
         FirebaseManager.Auth.CreateUserWithEmailAndPasswordAsync(id, pass).ContinueWithOnMainThread(task =>
         {

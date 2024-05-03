@@ -20,12 +20,31 @@ public class ResetPanel : MonoBehaviour
 
     private void SendResetMail()
     {
-        
+        SetInteractable(false);
+
+        string email = emailInputField.text;    
+        FirebaseManager.Auth.SendPasswordResetEmailAsync(email).ContinueWithOnMainThread(task =>
+        {
+            if ( task.IsCanceled ) {
+                panelController.ShowInfo("SendPasswordResetEmailAsync is Cancel");
+                SetInteractable(true);
+                return;
+            }else if( task.IsFaulted )
+            {
+                panelController.ShowInfo($"SendPasswordResetEmailAsync is Fail : {task.Exception.Message}");
+                SetInteractable(true);
+                return;
+            }
+
+            SetInteractable(true);
+            panelController.ShowInfo("SendPasswordResetEmailAsync Success!");
+            panelController.SetActivePanel(PanelController.Panel.Login);
+        });
     }
 
     private void Cancel()
     {
-        
+        panelController.SetActivePanel(PanelController.Panel.Login);
     }
 
     private void SetInteractable(bool interactable)

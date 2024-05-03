@@ -28,7 +28,7 @@ public class LoginPanel : MonoBehaviour
 
     private void ResetPassword()
     {
-        
+        panelController.SetActivePanel(PanelController.Panel.Reset);
     }
 
     public void Login()

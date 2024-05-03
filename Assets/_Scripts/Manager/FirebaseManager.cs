@@ -1,5 +1,6 @@
 using Firebase;
 using Firebase.Auth;
+using Firebase.Database;
 using UnityEngine;
 
 public class FirebaseManager : MonoBehaviour
@@ -13,6 +14,9 @@ public class FirebaseManager : MonoBehaviour
     private static FirebaseAuth auth;
     public static FirebaseAuth Auth { get { return auth; } }
 
+    private static FirebaseDatabase db;
+
+    public static FirebaseDatabase DB { get { return db; } } 
 
     private static bool isValid;
     public static bool IsValid { get { return isValid; } }

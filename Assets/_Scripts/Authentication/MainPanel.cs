@@ -1,5 +1,7 @@
+using Firebase.Auth;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainPanel : MonoBehaviour
@@ -12,20 +14,39 @@ public class MainPanel : MonoBehaviour
 
     [SerializeField] Button logoutButton;
     [SerializeField] Button editButton;
+    [SerializeField] Button startButton;
 
     private void Awake()
     {
         logoutButton.onClick.AddListener(Logout);
         editButton.onClick.AddListener(Edit);
+        startButton.onClick.AddListener(GameStart);
+    }
+
+    private void OnEnable()
+    {
+        if ( FirebaseManager.Auth == null ) return;
+
+        FirebaseUser user = FirebaseManager.Auth.CurrentUser;
+
+        nameText.text = user.DisplayName;
+        emailText.text = user.Email;
+        idText.text = user.UserId;
     }
 
     private void Logout()
     {
-        
+        FirebaseManager.Auth.SignOut();
+        panelController.SetActivePanel(PanelController.Panel.Login);
     }
 
     private void Edit()
     {
-        
+        panelController.SetActivePanel(PanelController.Panel.Edit);
+    }
+
+    private void GameStart()
+    {
+        SceneManager.LoadScene("DatabaseScene");
     }
 }
