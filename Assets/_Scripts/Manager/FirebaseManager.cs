@@ -54,6 +54,7 @@ public class FirebaseManager : MonoBehaviour
             // where app is a Firebase.FirebaseApp property of your application class.
             app = FirebaseApp.DefaultInstance;
             auth = FirebaseAuth.DefaultInstance;
+            db= FirebaseDatabase.DefaultInstance;
 
             // Set a flag here to indicate whether Firebase is ready to use by your app.
             Debug.Log("Firebase Check and FixDependencies success");
@@ -67,6 +68,7 @@ public class FirebaseManager : MonoBehaviour
 
             app = null;
             auth = null;
+            db = null;
         }
     }
 }
